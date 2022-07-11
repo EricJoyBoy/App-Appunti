@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "173197807235",
+    "project_id": "app-appunti",
+    "storage_bucket": "app-appunti.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173197807235:android:b0634623c340e1111095b6",
+        "android_client_info": {
+          "package_name": "it.uninsubria.appappunti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173197807235-4m7ud0teh2lmcpo122saoa6fkk1c6uuu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4r-7F6CBWsiP8soq15PirOOzEzRt0Ntw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173197807235-4m7ud0teh2lmcpo122saoa6fkk1c6uuu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
