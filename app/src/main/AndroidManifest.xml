@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
         <activity
+            android:name=".DashboardAdminActivity"
+            android:exported="false" />
+        <activity
             android:name=".DashboardUserActivity"
             android:exported="false" />
         <activity

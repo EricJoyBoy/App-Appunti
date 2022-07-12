@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">App Appunti</string>
+    <string name="new_user_signup">Non hai un account? <b>Registrati</b></string>
 </resources>
