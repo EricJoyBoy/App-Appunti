@@ -4,10 +4,13 @@
 
     <application
         android:allowBackup="true"
-        android:background="@drawable/background"
-        android:icon="@drawable/logo"
+
+        android:icon="@drawable/logomanifest"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logo"
+        android:roundIcon="@drawable/logomanifest"
+
+        
+
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
         <activity

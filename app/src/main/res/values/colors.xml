@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey01">#c5c5c5</color>
     <color name="grey02">#777777</color>
+    <color name = "red_blood">#D10000</color>
 </resources>
