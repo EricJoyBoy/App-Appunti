@@ -89,11 +89,12 @@ progressDialog.dismiss()
     private fun checkUser() {
         progressDialog.setMessage("Controllo utente...")
         val firebaseUser= auth.currentUser!!
-        val ref = FirebaseDatabase.getInstance().getReference("Users")
+        val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
         ref.child(firebaseUser.uid)
             .addListenerForSingleValueEvent(object: ValueEventListener{
                 override fun onCancelled(error:DatabaseError) {
-
+                    progressDialog.dismiss()
+                    Toast.makeText(this@LoginActivity,"Errore: ${error.message}",Toast.LENGTH_LONG).show()
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {

@@ -33,7 +33,7 @@ class SplashActivity : AppCompatActivity() {
 
         }else{
             val firebaseUser= firebaseAuth.currentUser!!
-            val ref = FirebaseDatabase.getInstance().getReference("Users")
+            val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
             ref.child(firebaseUser.uid)
                 .addListenerForSingleValueEvent(object: ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
@@ -47,6 +47,7 @@ class SplashActivity : AppCompatActivity() {
                         if(userType == "user"){
 
                             startActivity(Intent(this@SplashActivity,DashboardUserActivity::class.java))
+                            finish()
                         }else if(userType == "admin"){
                             startActivity(Intent(this@SplashActivity,DashboardAdminActivity::class.java))
                             finish()

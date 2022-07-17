@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import it.uninsubria.appappunti.databinding.ActivityRegisterBinding
 
+
 class RegisterActivity : AppCompatActivity() {
 
     //view binding
@@ -52,10 +53,11 @@ class RegisterActivity : AppCompatActivity() {
     private var password=""
 
     private fun validateData() {
-        name = binding.nameEt.text.toString()
-        email = binding.emailEt.text.toString()
-        password = binding.passwordEt.text.toString()
-        val cPassword = binding.cpasswordEt.text.toString()
+        //input dei dati
+        name = binding.nameEt.text.toString().trim()
+        email = binding.emailEt.text.toString().trim()
+        password = binding.passwordEt.text.toString().trim()
+        val cPassword = binding.cpasswordEt.text.toString().trim()
         if(name.isEmpty()){
             Toast.makeText(this,"Inserisci un nome", Toast.LENGTH_SHORT).show()
 
@@ -81,27 +83,26 @@ class RegisterActivity : AppCompatActivity() {
         progressDialog.show()
 
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                      updateUserInfo()
-                    progressDialog.dismiss()
-                    Toast.makeText(baseContext, "Account creato con successo", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    // If sign in fails, display a message to the user.
-                    progressDialog.dismiss()
-                    Toast.makeText(baseContext, "Account non creato", Toast.LENGTH_SHORT).show()
-                }
+            .addOnSuccessListener{
+                updateUserInfo()
+
+            }
+            .addOnFailureListener{ e->
+                progressDialog.dismiss()
+                Toast.makeText(this,"Creazione Account fallita a causa di ${e.message}", Toast.LENGTH_SHORT).show()
             }
 
     }
 
     private fun updateUserInfo() {
+
        progressDialog.setMessage("Aggiornamento dati in corso...")
-        val timestamp = System.currentTimeMillis()
-        val uid = auth.uid
         progressDialog.show()
+        val timestamp = System.currentTimeMillis()
+
+        val uid = auth.uid
+
+
         val user = auth.currentUser
         val hashMap: HashMap<String, Any?> = HashMap()
         hashMap["uid"] = uid
@@ -111,18 +112,20 @@ class RegisterActivity : AppCompatActivity() {
         hashMap["userType"] = "user"
         hashMap["timestamp"] = timestamp
 
-        val ref = FirebaseDatabase.getInstance().getReference("users")
+        val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
 
         ref.child(uid!!).setValue(hashMap)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     progressDialog.dismiss()
-                    Toast.makeText(baseContext, "Account creato con successo", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@RegisterActivity,DashboardUserActivity::class.java))
+                    Toast.makeText(this, "Registrazione avvenuta con successo", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                     finish()
                 } else {
                     progressDialog.dismiss()
-                    Toast.makeText(baseContext, "Dati non salvati", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Registrazione fallita", Toast.LENGTH_SHORT).show()
                 }
             }
 
