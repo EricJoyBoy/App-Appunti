@@ -13,9 +13,9 @@ import it.uninsubria.appappunti.databinding.RowCategoryBinding
 class AdapterCategory : RecyclerView.Adapter<AdapterCategory.HolderCategory>,Filterable {
 
     private val context: Context //permette di accedere ai vari metodi di android
-    public var categoryArrayList: ArrayList<ModelCategory>
+    public var categoryArrayList: ArrayList<ModelCategory> //lista di tutte le categorie
 
-    private var filterList: ArrayList<ModelCategory>//lista di tutte le categorie
+    private var filterList: ArrayList<ModelCategory>//lista di tutte le categorie filtrate
     private var filter: FilterCategory? = null //filtro per la ricerca
 
     private lateinit var binding: RowCategoryBinding //permette di accedere ai vari metodi di databinding

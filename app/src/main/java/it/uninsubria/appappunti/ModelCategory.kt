@@ -1,6 +1,6 @@
 package it.uninsubria.appappunti
 
-class ModelCategory { // classe che rappresenta una categoria
+ class ModelCategory { // classe che rappresenta una categoria
 
     var id:String = "" // id della categoria
     var category:String = "" // nome della categoria

@@ -54,13 +54,15 @@ class DashboardAdminActivity : AppCompatActivity() {
             firebaseAuth.signOut() // logout
             checkUser() // chiamata a funzione checkUser
         }
-        //handle click, start add category page
+
 
         binding.addCategoryBtnDashAdmin.setOnClickListener {
             startActivity(Intent(this, CategoryAddActivity::class.java))
         }
 
-
+        binding.addPdfFabDashAdmin.setOnClickListener {
+            startActivity(Intent(this, PdfAddActivity::class.java))
+        }
     }
 
     private fun loadCategories() {
