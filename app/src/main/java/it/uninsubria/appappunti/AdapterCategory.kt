@@ -2,6 +2,7 @@ package it.uninsubria.appappunti
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,6 +61,14 @@ class AdapterCategory : RecyclerView.Adapter<AdapterCategory.HolderCategory>,Fil
                 .show() //mostra l'alert dialog
         }
 
+        holder.itemView.setOnClickListener{ //listener per la view della categoria
+            val intent = Intent(context, PdfListAdminActivity::class.java) //crea un intent per aprire l'activity della categoria
+            intent.putExtra("categoryId", id) //inserisce l'id della categoria nel intent
+            intent.putExtra("category", category) //inserisce la categoria nel intent
+            intent.putExtra("uid", uid) //inserisce l'id dell'utente che ha creato la categoria nel intent
+            intent.putExtra("timestamp", timestamp) //inserisce il timestamp della categoria nel intent
+            context.startActivity(intent) //apre l'activity della categoria
+        }
 
     }
 
