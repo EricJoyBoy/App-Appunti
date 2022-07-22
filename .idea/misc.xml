@@ -4,10 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.114" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/bg_tab_selected.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/bg_tab_unselected.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/fragment_books_user.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/ic_add_comment.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/ic_bold_favorite_black.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/ic_comment.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/ic_delete_white.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/ic_download.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/ic_edit_white.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/ic_favorite.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/ic_favorite_border.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1925" />
@@ -19,25 +24,32 @@
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/shape_button02.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/shape_button03.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/shape_edittex01.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/shape_rect01.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/shape_rect02.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/shape_toolbar01.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/shape_toolbar02.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/drawable/tab_selector.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_category_add.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_dashboard_admin.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_dashboard_user.xml" value="0.1" />
-        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_detail_pdf.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_detail_pdf.xml" value="0.30214424951267055" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_edit_pdf.xml" value="0.25" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_main.xml" value="0.18" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_pdf_add.xml" value="0.33" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_pdf_list_admin.xml" value="0.25" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_profile.xml" value="0.22" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_profile_edit.xml" value="0.25" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_register.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_splash.xml" value="0.25" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/activity_view_pdf.xml" value="0.1" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/dialog_comment_add.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/fragment_books_user.xml" value="0.18" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/item_pdf_favorite.xml" value="0.18" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/row_category.xml" value="0.33" />
-        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/row_comment.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/row_comment.xml" value="0.25" />
         <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/row_pdf_admin.xml" value="0.1" />
+        <entry key="..\:/Users/laptop/AndroidStudioProjects/AppAppunti/app/src/main/res/layout/row_pdf_user.xml" value="0.1" />
       </map>
     </option>
   </component>

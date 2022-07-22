@@ -52,7 +52,7 @@ class DetailPdfActivity : AppCompatActivity() {
 
         //init progressBar
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Vui lòng chờ..")
+        progressDialog.setTitle("Attendere prego")
         progressDialog.setCanceledOnTouchOutside(false)
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -94,7 +94,7 @@ class DetailPdfActivity : AppCompatActivity() {
             //check user đã đăng nhập hay chưa
             if (firebaseAuth.currentUser == null) {
                 //chưa đăng nhập không thể add favorite
-                Toast.makeText(this, "Bạn không đăng nhập", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Non sei loggato", Toast.LENGTH_SHORT).show()
             } else {
                 //user đã đn
                 if (isInMyFavorite) {
@@ -108,7 +108,7 @@ class DetailPdfActivity : AppCompatActivity() {
             if (firebaseAuth.currentUser == null) {
                 Toast.makeText(
                     this,
-                    "Bạn chưa đăng nhập, vui lòng đăng nhập để có thể dùng chức năng này",
+                    "Non sei loggato effettua il login per commentare",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -160,7 +160,7 @@ class DetailPdfActivity : AppCompatActivity() {
             if (comment.isEmpty()) {
                 Toast.makeText(
                     this,
-                    "Bạn chưa nêu cảm nghĩ",
+                    "Commenti non può essere vuoto",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -171,7 +171,7 @@ class DetailPdfActivity : AppCompatActivity() {
     }
 
     private fun addComment() {
-        progressDialog.setMessage("Đang tải bình luận lên")
+        progressDialog.setMessage("Non ha aggiunto un commento")
         progressDialog.show()
 
         val timestamp = "${System.currentTimeMillis()}"
@@ -189,13 +189,13 @@ class DetailPdfActivity : AppCompatActivity() {
             .setValue(hashMap)
             .addOnSuccessListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, "Vừa thêm 1 bình luận", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Hai aggiunto un commento", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
                 progressDialog.dismiss()
                 Toast.makeText(
                     this,
-                    "Thêm bình luận thất bại",
+                    "Commento non aggiunto",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -213,7 +213,7 @@ class DetailPdfActivity : AppCompatActivity() {
         }
 
     private fun dowloadBook() {
-        progressDialog.setTitle("Dowload book..")
+        progressDialog.setTitle("Scarica i tuoi appunti")
         progressDialog.show()
 
         val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(bookUrl)
@@ -223,7 +223,7 @@ class DetailPdfActivity : AppCompatActivity() {
 
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Dowload that bai kiem tra lai mang", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Download non andato a buon fine ", Toast.LENGTH_SHORT)
                     .show()
             }
     }
@@ -240,13 +240,15 @@ class DetailPdfActivity : AppCompatActivity() {
             out.write(bytes)
             out.close()
 
-            Toast.makeText(this, "Đã lưu vào folder download", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "Download" +
+                    "", Toast.LENGTH_SHORT)
                 .show()
             progressDialog.dismiss()
             incrementDownloadCount()
         } catch (e: Exception) {
             progressDialog.dismiss()
-            Toast.makeText(this, "Thất bại, vui lòng kiểm tra lại 3G/Wifi", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "Errore generato da ${e.message
+            }", Toast.LENGTH_SHORT)
                 .show()
         }
 
@@ -347,7 +349,7 @@ class DetailPdfActivity : AppCompatActivity() {
                             0,
                             0
                         )
-                        binding.btnFavorite.text = "Xóa khỏi danh sách yêu thích"
+                        binding.btnFavorite.text = "Rimuovi dai preferiti"
                     } else {
                         binding.btnFavorite.setCompoundDrawablesRelativeWithIntrinsicBounds(
                             0,
@@ -355,7 +357,7 @@ class DetailPdfActivity : AppCompatActivity() {
                             0,
                             0
                         )
-                        binding.btnFavorite.text = "Thêm vào danh sách yêu thích"
+                        binding.btnFavorite.text = "Aggiungi ai Preferiti"
                     }
                 }
 
@@ -378,10 +380,10 @@ class DetailPdfActivity : AppCompatActivity() {
         ref.child(firebaseAuth.uid!!).child("Favorites").child(bookId)
             .setValue(hashMap)
             .addOnSuccessListener {
-                Toast.makeText(this, "Đã thêm vào danh sách yêu thích", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Appunto aggiunto ai preferiti", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Thất bại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Appunto rimosso dai preferiti", Toast.LENGTH_SHORT).show()
             }
     }
 }

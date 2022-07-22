@@ -40,7 +40,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:fontFamily="sans-serif-condensed"
-            android:text="Sửa thông tin sách"
+            android:text="Modfica PDF"
             android:textColor="@color/white"
             android:textSize="28sp" />
     </RelativeLayout>
@@ -130,7 +130,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
                 android:background="@drawable/shape_button01"
-                android:text="Update"
+                android:text="Modifica"
                 app:backgroundTint="@color/teal_700"
                 android:textColor="@color/white" />
 
