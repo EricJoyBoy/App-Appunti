@@ -15,7 +15,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import it.uninsubria.appappunti.databinding.RowCommentBinding
 
-
+/**
+ * Adapter per la lista dei commenti
+ */
 class AdapterComment :  RecyclerView.Adapter<AdapterComment.HolderComment>{
 
     val context: Context

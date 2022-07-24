@@ -107,7 +107,7 @@ class AdapterCategory : RecyclerView.Adapter<AdapterCategory.HolderCategory>,Fil
         if (filter == null) { //se non è stato ancora creato un filtro
             filter = FilterCategory(filterList, this) //crea un filtro
         }
-        return filter as Filter //ritorna il filtro
+        return filter as FilterCategory //ritorna il filtro
     }
 
 

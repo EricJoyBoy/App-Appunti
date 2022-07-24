@@ -41,7 +41,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun loadUserInfo() {
         //db reference to load user info
-        val ref = FirebaseDatabase.getInstance().getReference("Users")
+        val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
         ref.child(firebaseAuth.uid!!)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -81,13 +81,12 @@ class ProfileActivity : AppCompatActivity() {
 
         booksArrayList = ArrayList()
 
-        val ref = FirebaseDatabase.getInstance().getReference("Users")
+        val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
         ref.child(firebaseAuth.uid!!).child("Favorites")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     booksArrayList.clear()
                     for (ds in snapshot.children) {
-                        //chỉ nhận id của book, phần còn lại đã load trong class adapter
                         val bookId = "${ds.child("bookId").value}"
 
                         //set to model
@@ -98,7 +97,6 @@ class ProfileActivity : AppCompatActivity() {
                         booksArrayList.add(modelPdf)
                     }
 
-                    //set number sách yêu thích
                     binding.tvFavoriteBookCount.text = "${booksArrayList.size}"
                     adapterPdfFavorite = AdapterPdfFavorite(this@ProfileActivity, booksArrayList)
                     binding.rvFavorite.adapter = adapterPdfFavorite

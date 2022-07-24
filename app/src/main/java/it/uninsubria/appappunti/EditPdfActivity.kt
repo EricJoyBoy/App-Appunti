@@ -11,29 +11,29 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import it.uninsubria.appappunti.databinding.ActivityEditPdfBinding
 
-class EditPdfActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityEditPdfBinding
+class EditPdfActivity : AppCompatActivity() { //Activity che permette di modificare un pdf già presente nel database
+    private lateinit var binding: ActivityEditPdfBinding //Binding per la vista
 
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: ProgressDialog //Dialog che mostra lo stato della richiesta di modifica
 
-    private lateinit var categoryTitleArrayList: ArrayList<String>
+    private lateinit var categoryTitleArrayList: ArrayList<String> //Lista di stringhe che contiene i titoli delle categorie presenti nel database
 
-    private lateinit var categoryIdArrayList: ArrayList<String>
+    private lateinit var categoryIdArrayList: ArrayList<String> //Lista di stringhe che contiene gli id delle categorie presenti nel database
 
     //book id get from intent started from PDFAdminAdapter
-    private var bookId = ""
-    override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityEditPdfBinding.inflate(layoutInflater)
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    private var bookId = "" //id del libro che si sta modificando
+    override fun onCreate(savedInstanceState: Bundle?) { //Funzione che viene chiamata all'avvio dell'activity
+        binding = ActivityEditPdfBinding.inflate(layoutInflater) //Inflazione della vista
+        super.onCreate(savedInstanceState) //Chiamata alla funzione super
+        setContentView(binding.root) //Impostazione della vista
 
-        bookId = intent.getStringExtra("bookId")!!
-        progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Titolo..")
-        progressDialog.setCanceledOnTouchOutside(false)
+        bookId = intent.getStringExtra("bookId")!! //Prende l'id del libro da modificare dall'intent
+        progressDialog = ProgressDialog(this) //Creazione del dialog che mostra lo stato della richiesta di modifica
+        progressDialog.setTitle("Titolo..") //Impostazione del titolo del dialog
+        progressDialog.setCanceledOnTouchOutside(false) //Impostazione che impedisce all'utente di chiudere il dialog con il touch dello schermo
 
-        loadCategories()
-        loadBookInfo()
+        loadCategories() //Chiamata alla funzione che carica le categorie dal database
+        loadBookInfo() //Chiamata alla funzione che carica i dati del libro dal database
 
         binding.btnBack.setOnClickListener {
             onBackPressed()
@@ -47,26 +47,25 @@ class EditPdfActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadBookInfo() {
+    private fun loadBookInfo() { //Funzione che carica i dati del libro dal database
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Books")
-        ref.child(bookId)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+        ref.child(bookId) //Impostazione della referenza del libro
+            .addListenerForSingleValueEvent(object : ValueEventListener { //Creazione di un listener per la richiesta di dati
+                override fun onDataChange(snapshot: DataSnapshot) { //  Funzione che viene chiamata quando i dati sono disponibili
                     //get book info
-                    selectedCategoryId = snapshot.child("categoryId").value.toString()
-                    val description = snapshot.child("description").value.toString()
-                    val title = snapshot.child("title").value.toString()
+                    selectedCategoryId = snapshot.child("categoryId").value.toString() //Impostazione dell'id della categoria selezionata
+                    val description = snapshot.child("description").value.toString() //Impostazione della descrizione del libro
+                    val title = snapshot.child("title").value.toString() //Impostazione del titolo del libro
 
-                    binding.edtTitle.setText(title)
-                    binding.edtDescription.setText(description)
+                    binding.edtTitle.setText(title) //Impostazione del titolo del libro nell'edit text
+                    binding.edtDescription.setText(description) //Impostazione della descrizione del libro nell'edit text
 
-                    //load book category voi category id
                     val refBookCategory = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("categories")
-                    refBookCategory.child(selectedCategoryId)
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                val category = snapshot.child("category").value
-                                binding.tvCategory.text = category.toString()
+                    refBookCategory.child(selectedCategoryId) //Impostazione della referenza della categoria selezionata
+                        .addListenerForSingleValueEvent(object : ValueEventListener { //Creazione di un listener per la richiesta di dati
+                            override fun onDataChange(snapshot: DataSnapshot) { //  Funzione che viene chiamata quando i dati sono disponibili
+                                val category = snapshot.child("category").value //Impostazione della categoria selezionata
+                                binding.tvCategory.text = category.toString() //Impostazione della categoria selezionata nella text view
                             }
 
                             override fun onCancelled(error: DatabaseError) {
@@ -81,32 +80,30 @@ class EditPdfActivity : AppCompatActivity() {
             })
     }
 
-    private var title = ""
-    private var description = ""
+    private var title = "" //Stringa che contiene il titolo del libro
+    private var description = "" //Stringa che contiene la descrizione del libro
 
-    private fun validateData() {
-        //get data
-        title = binding.edtTitle.text.toString().trim()
-        description = binding.edtDescription.text.toString().trim()
+    private fun validateData() { //Funzione che valida i dati inseriti dall'utente
+        title = binding.edtTitle.text.toString().trim() //Impostazione del titolo del libro
+        description = binding.edtDescription.text.toString().trim() //Impostazione della descrizione del libro
         //validate data
-        if (title.isEmpty()) {
-            Toast.makeText(this, "Enter title", Toast.LENGTH_SHORT).show()
-        } else if (description.isEmpty()) {
-            Toast.makeText(this, "Enter description", Toast.LENGTH_SHORT).show()
-        } else if (selectedCategoryId.isEmpty()) {
-            Toast.makeText(this, "Pick Category", Toast.LENGTH_SHORT).show()
+        if (title.isEmpty()) { //Se il titolo del libro è vuoto
+            Toast.makeText(this, "Enter title", Toast.LENGTH_SHORT).show() //Mostra un toast che indica che il titolo del libro è vuoto
+        } else if (description.isEmpty()) { //Se la descrizione del libro è vuota
+            Toast.makeText(this, "Enter description", Toast.LENGTH_SHORT).show() //Mostra un toast che indica che la descrizione del libro è vuota
+        } else if (selectedCategoryId.isEmpty()) { //Se la categoria selezionata è vuota
+            Toast.makeText(this, "Pick Category", Toast.LENGTH_SHORT).show() //Mostra un toast che indica che la categoria non è stata selezionata
         } else {
-            updatePdf()
+            updatePdf() //Chiamata alla funzione che aggiorna il libro nel database
         }
     }
 
-    private fun updatePdf() {
-        progressDialog.setMessage("Updating book info")
-        progressDialog.show()
+    private fun updatePdf() { //Funzione che aggiorna il libro nel database
+        progressDialog.setMessage("Updating book info") //Impostazione del messaggio del dialog
+        progressDialog.show() //Mostra il dialog
 
 
-        //set data vs key cua firebase
-        val hashMap = HashMap<String, Any>()
+        val hashMap = HashMap<String, Any>() //Creazione di una mappa di stringhe e oggetti che contiene i dati da aggiornare
         hashMap["title"] = "$title"
         hashMap["description"] = "$description"
         hashMap["categoryId"] = "$selectedCategoryId"
@@ -123,15 +120,15 @@ class EditPdfActivity : AppCompatActivity() {
             }
     }
 
-    private var selectedCategoryId = ""
-    private var selectedCategoryTitle = ""
-    private fun categoryDialog() {
-        val categoriesArray = arrayOfNulls<String>(categoryTitleArrayList.size)
-        for (i in categoryTitleArrayList.indices) {
-            categoriesArray[i] = categoryTitleArrayList[i]
+    private var selectedCategoryId = "" //Stringa che contiene l'id della categoria selezionata
+    private var selectedCategoryTitle = "" //Stringa che contiene il titolo della categoria selezionata
+    private fun categoryDialog() { //Funzione che mostra un dialog che permette di selezionare la categoria del libro
+        val categoriesArray = arrayOfNulls<String>(categoryTitleArrayList.size) //Creazione di un array di stringhe che contiene i titoli delle categorie
+        for (i in categoryTitleArrayList.indices) { //Ciclo che scorre tutte le categorie
+            categoriesArray[i] = categoryTitleArrayList[i] //
         }
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Choose Category")
+        val builder = AlertDialog.Builder(this) //Creazione di un alert dialog che permette di selezionare la categoria del libro
+        builder.setTitle("Choose Category") //Impostazione del titolo del dialog
             .setItems(categoriesArray) { dialog, position ->
                 //khi click luu id, title
                 selectedCategoryId = categoryIdArrayList[position]
@@ -141,19 +138,19 @@ class EditPdfActivity : AppCompatActivity() {
             }.show()
     }
 
-    private fun loadCategories() {
-        categoryTitleArrayList = ArrayList()
-        categoryIdArrayList = ArrayList()
+    private fun loadCategories() { //Funzione che carica le categorie dal database
+        categoryTitleArrayList = ArrayList() //Creazione di un array list di stringhe che contiene i titoli delle categorie
+        categoryIdArrayList = ArrayList() //Creazione di un array list di stringhe che contiene gli id delle categorie
 
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("categories")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                categoryIdArrayList.clear()
-                categoryTitleArrayList.clear()
+        ref.addListenerForSingleValueEvent(object : ValueEventListener { //Creazione di un listener per la richiesta di dati
+            override fun onDataChange(snapshot: DataSnapshot) { //  Funzione che viene chiamata quando i dati sono disponibili
+                categoryIdArrayList.clear() //Pulizia dell'array list che contiene gli id delle categorie
+                categoryTitleArrayList.clear() //Pulizia dell'array list che contiene i titoli delle categorie
 
-                for (ds in snapshot.children) {
-                    val id = "${ds.child("id").value}"
-                    val category = "${ds.child("categories").value}"
+                for (ds in snapshot.children) { //Ciclo che scorre tutte le categorie
+                    val id = "${ds.child("id").value}" //  Impostazione dell'id della categoria
+                    val category = "${ds.child("categories").value}" //  Impostazione del titolo della categoria
 
                     categoryIdArrayList.add(id)
                     categoryTitleArrayList.add(category)

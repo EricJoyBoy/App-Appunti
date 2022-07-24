@@ -82,7 +82,6 @@ class ProfileEditActivity : AppCompatActivity() {
         progressDialog.setMessage("Caricamento in corso...")
         progressDialog.show()
 
-        //đường dẫn image và name, sử dụng uid để thay thế trước đó
         val filePathAndName = "ProfileImages/" + firebaseAuth.uid
 
         //storage reference
@@ -96,12 +95,12 @@ class ProfileEditActivity : AppCompatActivity() {
             }
             .addOnFailureListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, "tải ảnh lên thất bại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Caricamento della foto non riuscito", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun updateProfile(uploadImageUrl: String) {
-        progressDialog.setMessage("Cập nhập thông tin")
+        progressDialog.setMessage("Aggiornamento informazioni in corso...")
         val hashMap: HashMap<String, Any> = HashMap()
         hashMap["name"] = "$name"
         if (imageUri != null) {
@@ -114,12 +113,12 @@ class ProfileEditActivity : AppCompatActivity() {
             .updateChildren(hashMap)
             .addOnSuccessListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, "Cập nhập thông tin cá nhân thành công", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Informazioni personali aggiornate correttamente", Toast.LENGTH_SHORT)
                     .show()
             }
             .addOnFailureListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, "cập nhập thông tin thất bại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Impossibile aggiornare le informazioni", Toast.LENGTH_SHORT).show()
             }
 
     }
@@ -154,13 +153,11 @@ class ProfileEditActivity : AppCompatActivity() {
             })
     }
 
-    //hiển thị menu đính kèm ảnh
     private fun showImageAttachMenu() {
-        //show popup menu với option Camera, thư viện chọn ảnh
 
         val popupMenu = PopupMenu(this, binding.ivProfile)
-        popupMenu.menu.add(Menu.NONE, 0, 0, "Chụp ảnh")
-        popupMenu.menu.add(Menu.NONE, 1, 1, "Thư viện")
+        popupMenu.menu.add(Menu.NONE, 0, 0, "Fai una foto")
+        popupMenu.menu.add(Menu.NONE, 1, 1, "Galleria")
         popupMenu.show()
 
         //click vào item
@@ -222,7 +219,7 @@ class ProfileEditActivity : AppCompatActivity() {
                 //set imageview
                 binding.ivProfile.setImageURI(imageUri)
             } else {
-                Toast.makeText(this, "Cancellato", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Annulato", Toast.LENGTH_SHORT).show()
             }
         })
 

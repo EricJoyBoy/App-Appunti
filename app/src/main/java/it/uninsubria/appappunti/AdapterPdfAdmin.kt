@@ -11,19 +11,22 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import it.uninsubria.appappunti.databinding.RowPdfAdminBinding
 
+/**
+ * Adapter per la lista dei PDF dell'admin
+ */
 class AdapterPdfAdmin : RecyclerView.Adapter<AdapterPdfAdmin.HolderPdfAdmin>, Filterable  {
 
     private var context: Context
 
-    var pdfArrayList: ArrayList<ModelPdf>
+    var pdfArrayList: ArrayList<ModelPdf> //lista di pdf
 
-    private var filterList: ArrayList<ModelPdf>
+    private var filterList: ArrayList<ModelPdf> //lista di pdf filtrata
 
-    private var filter: FilterPdfAdmin? = null
+    private var filter: FilterPdfAdmin? = null //filtro per la ricerca
 
-    private lateinit var binding: RowPdfAdminBinding
+    private lateinit var binding: RowPdfAdminBinding //binding per la row del pdf
 
-    constructor(context: Context, pdfArrayList: ArrayList<ModelPdf>) {
+    constructor(context: Context, pdfArrayList: ArrayList<ModelPdf>) { //costruttore
         this.context = context
         this.pdfArrayList = pdfArrayList
         this.filterList = ArrayList()
@@ -31,13 +34,13 @@ class AdapterPdfAdmin : RecyclerView.Adapter<AdapterPdfAdmin.HolderPdfAdmin>, Fi
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HolderPdfAdmin {
-        binding = RowPdfAdminBinding.inflate(LayoutInflater.from(context), parent, false)
-        return HolderPdfAdmin(binding.root)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HolderPdfAdmin { //crea la row del pdf
+        binding = RowPdfAdminBinding.inflate(LayoutInflater.from(context), parent, false) //infla la row del pdf
+        return HolderPdfAdmin(binding.root) //ritorna la row del pdf
     }
 
 
-    override fun onBindViewHolder(holder: HolderPdfAdmin, position: Int) {
+    override fun onBindViewHolder(holder: HolderPdfAdmin, position: Int) { //imposta i dati della row del pdf
         val model = pdfArrayList[position]
         val pdfId = model.id
         val categoryId = model.categoryId
@@ -50,14 +53,12 @@ class AdapterPdfAdmin : RecyclerView.Adapter<AdapterPdfAdmin.HolderPdfAdmin>, Fi
         val formattedDate = MyApplication.formatTimeStamp(timestamp)
 
         //set data
-        holder.tvTitle.text = title
-        holder.tvDescription.text = description
-        holder.tvDate.text = formattedDate
+        holder.tvTitle.text = title //set titolo
+        holder.tvDescription.text = description //set descrizione
+        holder.tvDate.text = formattedDate //set data
 
-        //load category
-        MyApplication.loadCategory(categoryId, holder.tvCategory)
+        MyApplication.loadCategory(categoryId, holder.tvCategory) //carica categoria
 
-        //không cần số trang ở đây, đặt null cho số trang
         MyApplication.loadPdfFromUrlSinglePage(
             pdfUrl,
             title,
@@ -82,25 +83,25 @@ class AdapterPdfAdmin : RecyclerView.Adapter<AdapterPdfAdmin.HolderPdfAdmin>, Fi
 
     }
 
-    private fun moreOptionDialog(model: ModelPdf, holder: AdapterPdfAdmin.HolderPdfAdmin) {
+    private fun moreOptionDialog(model: ModelPdf, holder: AdapterPdfAdmin.HolderPdfAdmin) { //dialog per le opzioni del pdf
         //get id, url, title cua sach
         val bookId = model.id
         val bookUrl = model.url
         val bookTitle = model.title
 
         //show dialog
-        val options = arrayOf("Modifica", "Cancella")
+        val options = arrayOf("Modifica", "Cancella") //opzioni del dialog
 
-        //thong bao
-        val builder = AlertDialog.Builder(context)
+
+        val builder = AlertDialog.Builder(context) //crea il dialog
         builder.setTitle("Scegli un'opzione")
             .setItems(options) { dialog, position ->
 
-                if (position == 0) {
-                    val intent = Intent(context, EditPdfActivity::class.java)
-                    intent.putExtra("bookId", bookId)
-                    context.startActivity(intent)
-                } else if (position == 1) {
+                if (position == 0) { //modifica
+                    val intent = Intent(context, EditPdfActivity::class.java) //intent per la modifica
+                    intent.putExtra("bookId", bookId) //set id
+                    context.startActivity(intent) //    avvia la modifica
+                } else if (position == 1) { //cancella
 
 
                     MyApplication.deleteBook(context, bookId, bookUrl, bookTitle)
@@ -119,7 +120,7 @@ class AdapterPdfAdmin : RecyclerView.Adapter<AdapterPdfAdmin.HolderPdfAdmin>, Fi
     }
 
 
-    inner class HolderPdfAdmin(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class HolderPdfAdmin(itemView: View) : RecyclerView.ViewHolder(itemView) { //holder per la row del pdf
         val pdfView = binding.pdfView
         val progressBar = binding.pb
         val tvTitle = binding.tvTitle

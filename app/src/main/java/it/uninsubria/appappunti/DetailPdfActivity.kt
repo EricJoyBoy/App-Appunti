@@ -25,45 +25,42 @@ import java.io.FileOutputStream
 
 class DetailPdfActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityDetailPdfBinding
+    private lateinit var binding: ActivityDetailPdfBinding //lateinit perchè non è ancora inizializzato
 
-    //get from firebase
-    private var bookTitle = ""
-    private var bookUrl = ""
+    private var bookTitle = "" //titolo del libro
+    private var bookUrl = "" //url del libro
 
-    private var isInMyFavorite = false
+    private var isInMyFavorite = false //se il libro è in mio preferito
 
-    //get from intent
-    private var bookId = ""
+    private var bookId = "" //id del libro
 
-    private lateinit var progressDialog: ProgressDialog
-    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var progressDialog: ProgressDialog //dialog per la caricamento del libro
+    private lateinit var firebaseAuth: FirebaseAuth //autenticazione firebase
 
-    private lateinit var commentArrayList: ArrayList<ModelComment>
+    private lateinit var commentArrayList: ArrayList<ModelComment> //lista dei commenti
 
-    private lateinit var adapterComment: AdapterComment
+    private lateinit var adapterComment: AdapterComment //adapter dei commenti
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityDetailPdfBinding.inflate(layoutInflater)
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        //get book id  tu intent
-        bookId = intent.getStringExtra("bookId")!!
+    override fun onCreate(savedInstanceState: Bundle?) { //quando l'activity viene creata
+        binding = ActivityDetailPdfBinding.inflate(layoutInflater) //infla la view
+        super.onCreate(savedInstanceState)//richiamo il metodo della superclasse
+        setContentView(binding.root)//setto la view come contenuto dell'activity
+        bookId = intent.getStringExtra("bookId")!! //prendo l'id del libro dall'intent
 
         //init progressBar
-        progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Attendere prego")
-        progressDialog.setCanceledOnTouchOutside(false)
+        progressDialog = ProgressDialog(this) //creo il dialog
+        progressDialog.setTitle("Attendere prego") //setto il titolo del dialog
+        progressDialog.setCanceledOnTouchOutside(false) //non si può chiudere con il touch sull'area sopra al dialog
 
-        firebaseAuth = FirebaseAuth.getInstance()
-        if (firebaseAuth.currentUser != null) {
-            checkIsFavorite()
+        firebaseAuth = FirebaseAuth.getInstance() //prendo l'autenticazione firebase
+        if (firebaseAuth.currentUser != null) { //se l'utente è loggato
+            checkIsFavorite() //controllo se il libro è in mio preferito
         }
-        //luot xem tu tang moi lan load
-        MyApplication.incrementBookViewCount(bookId)
 
-        loadBookDetail()
-        showComments()
+        MyApplication.incrementBookViewCount(bookId) //incremento il contatore di visualizzazioni del libro
+
+        loadBookDetail() //carico i dettagli del libro
+        showComments() //mostro i commenti
 
         binding.btnBack.setOnClickListener {
             onBackPressed()
@@ -78,34 +75,31 @@ class DetailPdfActivity : AppCompatActivity() {
         binding.btnDowloadBook.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
                     this,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE //controllo se ho il permesso di scrivere sull'SD
+                ) == PackageManager.PERMISSION_GRANTED //se ho il permesso
             ) {
-                Log.d("ndt", "permission granted")
-                dowloadBook()
+                Log.d("ndt", "permission granted") //log per controllo
+                dowloadBook() //scarico il libro
             } else {
-                Log.d("ndt", "permission denied")
-                requestStorePermissonLaucher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                Log.d("ndt", "permission denied") //log per controllo
+                requestStorePermissonLaucher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) //richiedo il permesso
             }
         }
 
         binding.btnFavorite.setOnClickListener {
-            //chỉ add khi đã đăng nhập
-            //check user đã đăng nhập hay chưa
-            if (firebaseAuth.currentUser == null) {
-                //chưa đăng nhập không thể add favorite
-                Toast.makeText(this, "Non sei loggato", Toast.LENGTH_SHORT).show()
+
+            if (firebaseAuth.currentUser == null) { //se non sono loggato
+                Toast.makeText(this, "Non sei loggato", Toast.LENGTH_SHORT).show()  //mostro un toast
             } else {
-                //user đã đn
-                if (isInMyFavorite) {
-                    MyApplication.removeFromFavorite(this, bookId)
-                } else {
-                    addToFavorite()
+                if (isInMyFavorite) { //se il libro è in mio preferito
+                    MyApplication.removeFromFavorite(this, bookId) //rimuovo il libro dai miei preferiti
+                } else { //se il libro non è in mio preferito
+                    addToFavorite() //aggiungo il libro ai miei preferiti
                 }
             }
         }
         binding.btnAddComment.setOnClickListener {
-            if (firebaseAuth.currentUser == null) {
+            if (firebaseAuth.currentUser == null) { //se non sono loggato
                 Toast.makeText(
                     this,
                     "Non sei loggato effettua il login per commentare",
@@ -118,46 +112,44 @@ class DetailPdfActivity : AppCompatActivity() {
     }
 
 
-    private fun showComments() {
+    private fun showComments() { //mostro i commenti
         commentArrayList = ArrayList()
 
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Books")
         ref.child(bookId).child("Comments")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    commentArrayList.clear()
-                    for (ds in snapshot.children) {
-                        val model = ds.getValue(ModelComment::class.java)
-                        commentArrayList.add(model!!)
+                    commentArrayList.clear() //svuoto la lista dei commenti
+                    for (ds in snapshot.children) { //per ogni commento
+                        val model = ds.getValue(ModelComment::class.java) //prendo i dati del commento
+                        commentArrayList.add(model!!) //aggiungo il commento alla lista
                     }
-                    adapterComment = AdapterComment(this@DetailPdfActivity, commentArrayList)
+                    adapterComment = AdapterComment(this@DetailPdfActivity, commentArrayList) //creo l'adapter dei commenti
 
-                    binding.rvComment.adapter = adapterComment
+                    binding.rvComment.adapter = adapterComment //setto l'adapter dei commenti
                 }
-                override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) { //
 
                 }
             })
     }
 
     private var comment = ""
-    private fun addCommentDialog() {
-        val commentAddBinding = DialogCommentAddBinding.inflate(LayoutInflater.from(this))
+    private fun addCommentDialog() { //dialog per aggiungere un commento
+        val commentAddBinding = DialogCommentAddBinding.inflate(LayoutInflater.from(this)) //inflo la view del dialog
 
-        val builder = AlertDialog.Builder(this, R.style.CustomDialog)
-        builder.setView(commentAddBinding.root)
+        val builder = AlertDialog.Builder(this, R.style.CustomDialog) //creo il dialog
+        builder.setView(commentAddBinding.root) //setto la view del dialog
 
-        //tạo và show thông báo
-        val alertDialog = builder.create()
-        alertDialog.show()
+        val alertDialog = builder.create() //creo il dialog
+        alertDialog.show() //mostro il dialog
 
-        //click quay lại, tắt dialog
         commentAddBinding.btnBack.setOnClickListener {
-            alertDialog.dismiss()
+            alertDialog.dismiss() //chiudo il dialog
         }
         commentAddBinding.btnSubmit.setOnClickListener {
-            comment = commentAddBinding.edtComment.text.toString().trim()
-            if (comment.isEmpty()) {
+            comment = commentAddBinding.edtComment.text.toString().trim() //prendo il commento
+            if (comment.isEmpty()) { //se il commento è vuoto
                 Toast.makeText(
                     this,
                     "Commenti non può essere vuoto",
@@ -185,7 +177,7 @@ class DetailPdfActivity : AppCompatActivity() {
 
         //books > bookId > Comments > commentId > commentData
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Books")
-        ref.child(bookId).child("Comments").child(timestamp)
+        ref.child(bookId).child("Comments").child(timestamp) //per ogni commento
             .setValue(hashMap)
             .addOnSuccessListener {
                 progressDialog.dismiss()
@@ -212,12 +204,12 @@ class DetailPdfActivity : AppCompatActivity() {
             }
         }
 
-    private fun dowloadBook() {
-        progressDialog.setTitle("Scarica i tuoi appunti")
-        progressDialog.show()
+    private fun dowloadBook() { //scarico il libro
+        progressDialog.setTitle("Scarica i tuoi appunti") //setto il titolo del dialog
+        progressDialog.show() //mostro il dialog
 
-        val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(bookUrl)
-        storageReference.getBytes(Constants.MAX_BYTES_PDF)
+        val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(bookUrl) //prendo la reference del libro
+        storageReference.getBytes(Constants.MAX_BYTES_PDF) //prendo i bytes del libro
             .addOnSuccessListener { bytes ->
                 saveToDowloadsFolder(bytes)
 
@@ -228,17 +220,17 @@ class DetailPdfActivity : AppCompatActivity() {
             }
     }
 
-    private fun saveToDowloadsFolder(bytes: ByteArray?) {
+    private fun saveToDowloadsFolder(bytes: ByteArray?) { //salvo il libro nella cartella dei dowloads
         val nameWithExtension = "${System.currentTimeMillis()}.pdf"
         try {
             val downloadsFolder =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            downloadsFolder.mkdirs() //tao folder neu khong ton tai
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) //prendo la cartella dei dowloads
+            downloadsFolder.mkdirs() //creo la cartella dei dowloads
 
-            val filePath = downloadsFolder.path + "/" + nameWithExtension
-            val out = FileOutputStream(filePath)
-            out.write(bytes)
-            out.close()
+            val filePath = downloadsFolder.path + "/" + nameWithExtension //prendo il percorso del file
+            val out = FileOutputStream(filePath) //prendo il file output stream
+            out.write(bytes) //scrivo i bytes nel file
+            out.close() //chiudo il file output stream
 
             Toast.makeText(this, "Download" +
                     "", Toast.LENGTH_SHORT)
@@ -254,26 +246,24 @@ class DetailPdfActivity : AppCompatActivity() {
 
     }
 
-    private fun incrementDownloadCount() {
+    private fun incrementDownloadCount() { //incremento il contatore di download
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Books")
         ref.child(bookId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var downloadsCount = "${snapshot.child("dowloadsCount").value}"
 
-                    if (downloadsCount == "" || downloadsCount == "null") {
-                        downloadsCount = "0"
+                    if (downloadsCount == "" || downloadsCount == "null") { //se il contatore è vuoto
+                        downloadsCount = "0" //lo setto a 0
                     }
-                    val newDownloadsCount: Long = downloadsCount.toLong() + 1
+                    val newDownloadsCount: Long = downloadsCount.toLong() + 1 //incremento il contatore
 
-                    //lay du lieu tu db
-                    val hashMap: HashMap<String, Any> = HashMap()
-                    hashMap["dowloadsCount"] = newDownloadsCount
+                    val hashMap: HashMap<String, Any> = HashMap() //creo il hashmap
+                    hashMap["dowloadsCount"] = newDownloadsCount //setto il contatore
 
-                    //update len db
                     val dbRef = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Books")
-                    dbRef.child(bookId)
-                        .updateChildren(hashMap)
+                    dbRef.child(bookId) //per ogni libro
+                        .updateChildren(hashMap)//aggiorno il contatore
                         .addOnSuccessListener {
 
                         }
@@ -288,7 +278,7 @@ class DetailPdfActivity : AppCompatActivity() {
             })
     }
 
-    private fun loadBookDetail() {
+    private fun loadBookDetail() { //carico i dettagli del libro
         //Books > bookId > Detail
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Books")
         ref.child(bookId)
@@ -307,17 +297,15 @@ class DetailPdfActivity : AppCompatActivity() {
                     //format date
                     val date = MyApplication.formatTimeStamp(timestamp.toLong())
 
-                    //load the loai
-                    MyApplication.loadCategory(categoryId, binding.tvCategory)
+                    MyApplication.loadCategory(categoryId, binding.tvCategory) //carico la categoria
 
-                    //load trang, anh
                     MyApplication.loadPdfFromUrlSinglePage(
                         "$bookUrl",
                         "$bookTitle",
                         binding.pdfView,
                         binding.progressBar,
                         binding.tvPages
-                    )
+                    )//carico il libro
 
                     //load pdf size
                     MyApplication.loadPdfSize("$bookUrl", "$bookTitle", binding.tvSize)
@@ -336,18 +324,18 @@ class DetailPdfActivity : AppCompatActivity() {
             })
     }
 
-    private fun checkIsFavorite() {
+    private fun checkIsFavorite() { //controllo se il libro è già stato aggiunto ai preferiti
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
         ref.child(firebaseAuth.uid!!).child("Favorites").child(bookId)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    isInMyFavorite = snapshot.exists()
-                    if (isInMyFavorite) {
+            .addValueEventListener(object : ValueEventListener { //listener per i dati del libro
+                override fun onDataChange(snapshot: DataSnapshot) { //se il libro è già stato aggiunto ai preferiti
+                    isInMyFavorite = snapshot.exists() //setto la variabile a true
+                    if (isInMyFavorite) { //se il libro è già stato aggiunto ai preferiti
                         binding.btnFavorite.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                            0,
-                            R.drawable.ic_favorite,
-                            0,
-                            0
+                            0, //left
+                            R.drawable.ic_favorite, //right
+                            0, //top
+                            0 //bottom
                         )
                         binding.btnFavorite.text = "Rimuovi dai preferiti"
                     } else {
@@ -367,15 +355,13 @@ class DetailPdfActivity : AppCompatActivity() {
             })
     }
 
-    private fun addToFavorite() {
+    private fun addToFavorite() { //aggiungo il libro ai preferiti
         val timestamp = System.currentTimeMillis()
 
-        //thiết lập dữ liệu để thêm vào db
-        val hashMap = HashMap<String, Any>()
+        val hashMap = HashMap<String, Any>() //creo il hashmap
         hashMap["bookId"] = bookId
         hashMap["timestamp"] = timestamp
 
-        //lưu vào db
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
         ref.child(firebaseAuth.uid!!).child("Favorites").child(bookId)
             .setValue(hashMap)
