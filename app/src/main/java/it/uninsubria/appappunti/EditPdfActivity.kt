@@ -130,7 +130,7 @@ class EditPdfActivity : AppCompatActivity() { //Activity che permette di modific
         val builder = AlertDialog.Builder(this) //Creazione di un alert dialog che permette di selezionare la categoria del libro
         builder.setTitle("Choose Category") //Impostazione del titolo del dialog
             .setItems(categoriesArray) { dialog, position ->
-                //khi click luu id, title
+
                 selectedCategoryId = categoryIdArrayList[position]
                 selectedCategoryTitle = categoryTitleArrayList[position]
 

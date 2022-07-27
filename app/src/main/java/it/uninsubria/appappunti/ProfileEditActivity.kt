@@ -27,26 +27,26 @@ import it.uninsubria.appappunti.databinding.ActivityProfileEditBinding
 
 class ProfileEditActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityProfileEditBinding
+    private lateinit var binding: ActivityProfileEditBinding // lateinit: variabile non inizializzata, non è possibile usarla prima di averla inizializzata
 
-    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth // lateinit: variabile non inizializzata, non è possibile usarla prima di averla inizializzata
 
-    private var imageUri: Uri? = null
+    private var imageUri: Uri? = null // variabile di tipo Uri? (nullable)
 
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: ProgressDialog // lateinit: variabile non inizializzata, non è possibile usarla prima di averla inizializzata
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityProfileEditBinding.inflate(layoutInflater)
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onCreate(savedInstanceState: Bundle?) { // override: sovrascrive un metodo di una superclasse
+        binding = ActivityProfileEditBinding.inflate(layoutInflater) // inflate: crea una istanza di una classe dato un layout XML
+        super.onCreate(savedInstanceState) // super: chiamata a un metodo di una superclasse
+        setContentView(binding.root) // setContentView: imposta il layout dell'activity
 
-        progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Attendere prego...")
-        progressDialog.setCanceledOnTouchOutside(false)
+        progressDialog = ProgressDialog(this) // crea una istanza di una classe ProgressDialog
+        progressDialog.setTitle("Attendere prego...") // imposta il titolo della ProgressDialog
+        progressDialog.setCanceledOnTouchOutside(false) // imposta che la ProgressDialog non si chiude quando si clicca fuori dalla finestra
 
-        firebaseAuth = FirebaseAuth.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance() // crea una istanza di FirebaseAuth
 
-        loadUserInfo()
+        loadUserInfo() // chiamata a funzione loadUserInfo
 
         binding.btnBack.setOnClickListener {
             onBackPressed()
@@ -61,31 +61,29 @@ class ProfileEditActivity : AppCompatActivity() {
         }
     }
 
-    private var name = ""
-    private fun validateData() {
-        name = binding.edtName.text.toString().trim()
+    private var name = "" // variabile di tipo String
+    private fun validateData() { // funzione validateData
+        name = binding.edtName.text.toString().trim() // assegna alla variabile name il valore del campo di testo edtName
 
-        if (name.isEmpty()) {
-            Toast.makeText(this, "Inserisci Nome", Toast.LENGTH_SHORT).show()
-        } else {
-            //tên đã nhập
-            if (imageUri == null) {
-                updateProfile("")
+        if (name.isEmpty()) { // se il campo di testo edtName è vuoto
+            Toast.makeText(this, "Inserisci Nome", Toast.LENGTH_SHORT).show() // mostra un messaggio di Toast
+        } else { // altrimenti
+            if (imageUri == null) { // se l'immagine non è stata selezionata
+                updateProfile("") // chiamata a funzione updateProfile
             } else {
-                uploadImage()
+                uploadImage() // chiamata a funzione uploadImage
             }
         }
 
     }
 
-    private fun uploadImage() {
+    private fun uploadImage() { // funzione uploadImage
         progressDialog.setMessage("Caricamento in corso...")
         progressDialog.show()
 
-        val filePathAndName = "ProfileImages/" + firebaseAuth.uid
+        val filePathAndName = "ProfileImages/" + firebaseAuth.uid // variabile di tipo String
 
-        //storage reference
-        val reference = FirebaseStorage.getInstance().getReference(filePathAndName)
+        val reference = FirebaseStorage.getInstance().getReference(filePathAndName) //  crea una istanza di FirebaseStorage e ne crea una referenza per il filePathAndName
         reference.putFile(imageUri!!)
             .addOnSuccessListener { taskSnapshot ->
                 val uriTask: Task<Uri> = taskSnapshot.storage.downloadUrl
@@ -99,11 +97,11 @@ class ProfileEditActivity : AppCompatActivity() {
             }
     }
 
-    private fun updateProfile(uploadImageUrl: String) {
-        progressDialog.setMessage("Aggiornamento informazioni in corso...")
-        val hashMap: HashMap<String, Any> = HashMap()
-        hashMap["name"] = "$name"
-        if (imageUri != null) {
+    private fun updateProfile(uploadImageUrl: String) { // funzione updateProfile
+        progressDialog.setMessage("Aggiornamento informazioni in corso...") // imposta il messaggio della ProgressDialog
+        val hashMap: HashMap<String, Any> = HashMap() // crea una istanza di HashMap
+        hashMap["name"] = "$name" // aggiunge all'HashMap il valore della variabile name
+        if (imageUri != null) { // se l'immagine è stata selezionata
             hashMap["profileImage"] = uploadImageUrl
         }
 
@@ -123,8 +121,7 @@ class ProfileEditActivity : AppCompatActivity() {
 
     }
 
-    private fun loadUserInfo() {
-        //db reference to load user info
+    private fun loadUserInfo() { // funzione loadUserInfo
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
         ref.child(firebaseAuth.uid!!)
             .addValueEventListener(object : ValueEventListener {
@@ -133,15 +130,13 @@ class ProfileEditActivity : AppCompatActivity() {
                     val profileImage = "${snapshot.child("profileImage").value}"
                     val timestamp = "${snapshot.child("timestamp").value}"
 
-                    //set data
                     binding.edtName.setText(name)
 
-                    //set image
                     try {
-                        Glide.with(this@ProfileEditActivity)
-                            .load(profileImage)
-                            .placeholder(R.drawable.ic_person_gray)
-                            .into(binding.ivProfile)
+                        Glide.with(this@ProfileEditActivity) // crea una istanza di Glide e lo passa alla funzione with
+                            .load(profileImage) // carica l'immagine dal percorso specificato
+                            .placeholder(R.drawable.ic_person_gray) // imposta un placeholder per l'immagine
+                            .into(binding.ivProfile) // imposta l'immagine come riferimento per l'ImageView ivProfile
                     } catch (e: Exception) {
 
                     }
@@ -155,45 +150,42 @@ class ProfileEditActivity : AppCompatActivity() {
 
     private fun showImageAttachMenu() {
 
-        val popupMenu = PopupMenu(this, binding.ivProfile)
-        popupMenu.menu.add(Menu.NONE, 0, 0, "Fai una foto")
-        popupMenu.menu.add(Menu.NONE, 1, 1, "Galleria")
+        val popupMenu = PopupMenu(this, binding.ivProfile) // crea una istanza di PopupMenu e lo passa alla funzione con il riferimento all'ImageView ivProfile
+        popupMenu.menu.add(Menu.NONE, 0, 0, "Fai una foto") // aggiunge un elemento al menu di PopupMenu
+        popupMenu.menu.add(Menu.NONE, 1, 1, "Galleria") // aggiunge un elemento al menu di PopupMenu
         popupMenu.show()
 
-        //click vào item
         popupMenu.setOnMenuItemClickListener { item ->
-            //get id của item đã click
-            val id = item.itemId
-            if (id == 0) {
-                pickImageCamera()
-            } else if (id == 1) {
-                pickImageGallery()
+            val id = item.itemId //
+            if (id == 0) { // se l'id dell'elemento è 0
+                pickImageCamera() // chiamata a funzione pickImageCamera
+            } else if (id == 1) { // altrimenti se l'id dell'elemento è 1
+                pickImageGallery() // chiamata a funzione pickImageGallery
             }
             true
         }
     }
 
-    private fun pickImageGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
+    private fun pickImageGallery() { // funzione pickImageGallery
+        val intent = Intent(Intent.ACTION_PICK) // crea una istanza di Intent e lo passa alla funzione con l'azione ACTION_PICK
+        intent.type = "image/*" // imposta il tipo di file da cercare
 
-        galleryActivityResultLauncher.launch(intent)
+        galleryActivityResultLauncher.launch(intent) // chiamata a funzione launch
     }
 
-    private fun pickImageCamera() {
-        val values = ContentValues()
-        values.put(MediaStore.Images.Media.TITLE, "Temp_Title")
-        values.put(MediaStore.Images.Media.DESCRIPTION, "Temp_Description")
+    private fun pickImageCamera() { // funzione pickImageCamera
+        val values = ContentValues() // crea una istanza di ContentValues
+        values.put(MediaStore.Images.Media.TITLE, "Temp_Title") // aggiunge all'ContentValues il titolo Temp_Title
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Temp_Description") // aggiunge all'ContentValues la descrizione Temp_Description
 
-        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)//   crea una istanza di Uri e lo passa alla funzione con il riferimento ai valori di ContentValues
 
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-        cameraActivityResultLauncher.launch(intent)
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE) // crea una istanza di Intent e lo passa alla funzione con l'azione ACTION_IMAGE_CAPTURE
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri) // aggiunge all'Intent l'Uri dell'immagine
+        cameraActivityResultLauncher.launch(intent) // chiamata a funzione launch
 
     }
 
-    //sử dụng để xử lý kết quả intent máy ảnh (cách mới thay thế cho startActivityForResult)
     private val cameraActivityResultLauncher =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),

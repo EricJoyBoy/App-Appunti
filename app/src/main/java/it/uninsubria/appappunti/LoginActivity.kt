@@ -14,34 +14,30 @@ import com.google.firebase.database.ValueEventListener
 import it.uninsubria.appappunti.databinding.ActivityDashboardUserBinding
 import it.uninsubria.appappunti.databinding.ActivityLoginBinding
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() { //Activity che permette di effettuare il login
 
-    private lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding //Binding per la vista di questa activity
 
-    private lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth //FirebaseAuth per effettuare il login
 
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: ProgressDialog //Dialog per mostrare lo stato di caricamento dell'applicazione
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreate(savedInstanceState: Bundle?) { //Funzione che viene chiamata all'avvio dell'activity
+        super.onCreate(savedInstanceState) //Chiamata alla funzione superclasse
+        binding = ActivityLoginBinding.inflate(layoutInflater) //Inflazione della vista di questa activity
+        setContentView(binding.root) //Impostazione della vista di questa activity
 
 
-        //init firebase auth
-        auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance() //Inizializzazione di FirebaseAuth
 
-        //init progress dialog, will show while creating account Register user
-        progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Registrazione in corso")
-        progressDialog.setCanceledOnTouchOutside(false)
+        progressDialog = ProgressDialog(this) //Inizializzazione di un dialog per mostrare lo stato di caricamento dell'applicazione
+        progressDialog.setTitle("Registrazione in corso") //Impostazione del titolo del dialog
+        progressDialog.setCanceledOnTouchOutside(false)//Impostazione che il dialog non può essere chiuso quando viene toccato l'esterno dello schermo
 
-        //handler click, not have account, goto register screen
         binding.signUpTv.setOnClickListener {
             startActivity(Intent(this,RegisterActivity::class.java))
         }
 
-        //handle click, login user
         binding.loginBtn.setOnClickListener {
 
             validateData()
@@ -52,43 +48,43 @@ class LoginActivity : AppCompatActivity() {
     private var email = ""
     private var password = ""
 
-    private fun validateData() {
+    private fun validateData() { //Funzione che valida i dati inseriti dall'utente
 
-        email = binding.emailEt.text.toString().trim()
-        password = binding.passwordEt.text.toString().trim()
+        email = binding.emailEt.text.toString().trim() //Prende il valore dell'edit text relativo all'email
+        password = binding.passwordEt.text.toString().trim() //Prende il valore dell'edit text relativo alla password
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            Toast.makeText(this,"Format Email non valido",Toast.LENGTH_LONG).show()
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){ //Controlla che l'email sia valida
+            Toast.makeText(this,"Format Email non valido",Toast.LENGTH_LONG).show() //Mostra un messaggio di errore
 
 
-        }else if(password.isEmpty()){
-            Toast.makeText(this,"Password non inserita",Toast.LENGTH_LONG).show()
+        }else if(password.isEmpty()){ //Controlla che la password non sia vuota
+            Toast.makeText(this,"Password non inserita",Toast.LENGTH_LONG).show() //Mostra un messaggio di errore
         } else {
-            loginUser()
+            loginUser() //Chiamata alla funzione che effettua il login
         }
 
     }
 
-    private fun loginUser() {
+    private fun loginUser() { //Funzione che effettua il login dell'utente
 
-        progressDialog.setMessage("Login in corso...")
-        progressDialog.show()
+        progressDialog.setMessage("Login in corso...") //Impostazione del messaggio del dialog
+        progressDialog.show() //Mostra il dialog
 
-        auth.signInWithEmailAndPassword(email,password)
+        auth.signInWithEmailAndPassword(email,password) //Effettua il login dell'utente con i dati inseriti
             .addOnSuccessListener {
-                checkUser()
+                checkUser() //Chiamata alla funzione che controlla se l'utente è un docente o uno studente
             }
 
             .addOnFailureListener{ e->
-progressDialog.dismiss()
-                Toast.makeText(this,"Login fallito causato da ${e.message}",Toast.LENGTH_LONG).show()
+progressDialog.dismiss() //Chiusura del dialog
+                Toast.makeText(this,"Login fallito causato da ${e.message}",Toast.LENGTH_LONG).show() //Mostra un messaggio di errore
 
             }
     }
 
-    private fun checkUser() {
-        progressDialog.setMessage("Controllo utente...")
-        val firebaseUser= auth.currentUser!!
+    private fun checkUser() { //Funzione che controlla se l'utente è un docente o uno studente
+        progressDialog.setMessage("Controllo utente...") //Impostazione del messaggio del dialog
+        val firebaseUser= auth.currentUser!! //Prende l'utente corrente
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
         ref.child(firebaseUser.uid)
             .addListenerForSingleValueEvent(object: ValueEventListener{

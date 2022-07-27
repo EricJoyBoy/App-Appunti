@@ -13,34 +13,27 @@ import it.uninsubria.appappunti.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {
 
-    //view binding
-    private lateinit var binding: ActivityRegisterBinding
+    private lateinit var binding: ActivityRegisterBinding // lateinit var = non inizializzato
 
-    //firebase auth
-    private lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth // lateinit var = non inizializzato
 
-    // progress dialog
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: ProgressDialog // lateinit var = non inizializzato
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreate(savedInstanceState: Bundle?) { // override fun = sovrascrive un metodo di una classe superiore
+        super.onCreate(savedInstanceState) // super = chiamo il metodo della classe superiore
+        binding = ActivityRegisterBinding.inflate(layoutInflater) // inflate = crea una vista da un layout xml
+        setContentView(binding.root) // setContentView = setta la vista dell'activity
 
-        //init firebase auth
-        auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance() // auth = istanza di FirebaseAuth
 
-        //init progress dialog, will show while creating account Register user
-        progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Registrazione in corso")
-        progressDialog.setCanceledOnTouchOutside(false)
+        progressDialog = ProgressDialog(this) // progressDialog = istanza di ProgressDialog
+        progressDialog.setTitle("Registrazione in corso") // progressDialog.setTitle = setta il titolo del dialogo
+        progressDialog.setCanceledOnTouchOutside(false) // progressDialog.setCanceledOnTouchOutside = setta se il dialogo può essere chiuso con un tocco
 
-        //handle back button click, goto  previous screen
         binding.backButton.setOnClickListener {
-            onBackPressed() // go back to previous screen
+            onBackPressed() // onBackPressed = funzione che fa tornare indietro all'activity precedente
         }
 
-        //handle click, begin register
         binding.signupButton.setOnClickListener {
             validateData()
         }
@@ -54,10 +47,10 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun validateData() {
         //input dei dati
-        name = binding.nameEt.text.toString().trim()
-        email = binding.emailEt.text.toString().trim()
-        password = binding.passwordEt.text.toString().trim()
-        val cPassword = binding.cpasswordEt.text.toString().trim()
+        name = binding.nameEt.text.toString().trim() // name = valore del campo nameEt
+        email = binding.emailEt.text.toString().trim() // email = valore del campo emailEt
+        password = binding.passwordEt.text.toString().trim() // password = valore del campo passwordEt
+        val cPassword = binding.cpasswordEt.text.toString().trim() // cPassword = valore del campo cpasswordEt
         if(name.isEmpty()){
             Toast.makeText(this,"Inserisci un nome", Toast.LENGTH_SHORT).show()
 
@@ -78,11 +71,11 @@ class RegisterActivity : AppCompatActivity() {
 
 }
 
-    private fun createUserAccount() {
-        progressDialog.setMessage("Creazione account in corso...")
-        progressDialog.show()
+    private fun createUserAccount() { // funzione che crea un account utente
+        progressDialog.setMessage("Creazione account in corso...") // progressDialog.setMessage = setta il messaggio del dialogo
+        progressDialog.show() // progressDialog.show = mostra il dialogo
 
-        auth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password) // auth.createUserWithEmailAndPassword = crea un account con email e password
             .addOnSuccessListener{
                 updateUserInfo()
 
@@ -94,7 +87,7 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
-    private fun updateUserInfo() {
+    private fun updateUserInfo() { //
 
        progressDialog.setMessage("Aggiornamento dati in corso...")
         progressDialog.show()

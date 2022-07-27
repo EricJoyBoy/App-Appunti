@@ -2,46 +2,42 @@ package it.uninsubria.appappunti
 
 import android.widget.Filter
 
-class FilterPdfUser : Filter{
+class FilterPdfUser : Filter{ //classe che implementa il filtro per la ricerca dei pdf dell'utente
 
-    var filterList: ArrayList<ModelPdf>
+    var filterList: ArrayList<ModelPdf> //lista dei pdf dell'utente
 
-    var adapterPdfUser: PDFUserAdapter
+    var adapterPdfUser: PDFUserAdapter //adapter della lista dei pdf dell'utente
 
-    constructor(filterList: ArrayList<ModelPdf>, adapterPdfUser: PDFUserAdapter) : super() {
+    constructor(filterList: ArrayList<ModelPdf>, adapterPdfUser: PDFUserAdapter) : super() { //costruttore della classe
         this.filterList = filterList
         this.adapterPdfUser = adapterPdfUser
     }
 
-    override fun performFiltering(constraint: CharSequence?): FilterResults {
-        var constraint: CharSequence? = constraint
-        val results = FilterResults()
+    override fun performFiltering(constraint: CharSequence?): FilterResults { //metodo che esegue il filtro
+        var constraint: CharSequence? = constraint //variabile che contiene il testo inserito nella searchview
+        val results = FilterResults() //variabile che contiene i risultati del filtro
 
-        //giá trị k đc null và trống
-        if (constraint != null && constraint.isNotEmpty()) {
-            //thay đổi thành chữ hoa hoặc chữ thường để tránh phân biệt chữ hoa chữ thường
-            constraint = constraint.toString().lowercase()
-            val filterModel = ArrayList<ModelPdf>()
-            for (i in filterList.indices) {
-                if (filterList[i].title.lowercase().contains(constraint)) {
-                    //thêm vào danh sách đã lọc
-                    filterModel.add(filterList[i])
+        if (constraint != null && constraint.isNotEmpty()) { //se il testo inserito è diverso da null e non è vuoto
+            constraint = constraint.toString().lowercase() //converte il testo inserito in minuscolo
+            val filterModel = ArrayList<ModelPdf>() //lista che contiene i risultati del filtro
+            for (i in filterList.indices) { //ciclo for che cicla tutti i pdf dell'utente
+                if (filterList[i].title.lowercase().contains(constraint)) { //se il titolo del pdf contiene il testo inserito
+                    filterModel.add(filterList[i]) //aggiunge il pdf alla lista dei risultati del filtro
                 }
             }
-            results.count = filterModel.size
-            results.values = filterModel
+            results.count = filterModel.size //numero di risultati del filtro
+            results.values = filterModel //lista dei risultati del filtro
         } else {
-            //giá trị được tìm kiếm là null hoặc rỗng, trả về tất cả dữ liệu
-            results.count = filterList.size
-            results.values = filterList
+            results.count = filterList.size //numero di risultati del filtro
+            results.values = filterList //lista dei risultati del filtro
         }
-        return results
+        return results //ritorna i risultati del filtro
     }
 
-    override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+    override fun publishResults(constraint: CharSequence?, results: FilterResults?) { //metodo che pubblica i risultati del filtro
         //lọc
-        adapterPdfUser.pdfArrayList = results!!.values as ArrayList<ModelPdf>
+        adapterPdfUser.pdfArrayList = results!!.values as ArrayList<ModelPdf> //lista dei risultati del filtro
 
-        adapterPdfUser. notifyDataSetChanged()
+        adapterPdfUser. notifyDataSetChanged() //aggiorna la lista dei pdf dell'utente
     }
 }

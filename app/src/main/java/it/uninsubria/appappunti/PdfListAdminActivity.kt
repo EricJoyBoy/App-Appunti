@@ -10,39 +10,37 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import it.uninsubria.appappunti.databinding.ActivityPdfListAdminBinding
 
-class PdfListAdminActivity : AppCompatActivity() {
+class PdfListAdminActivity : AppCompatActivity() { //Activity che mostra la lista dei PDF caricati dall'amministratore
 
 
-    private lateinit var binding: ActivityPdfListAdminBinding
+    private lateinit var binding: ActivityPdfListAdminBinding // variabile di tipo ActivityPdfListAdminBinding
 
-    private var categoryId = ""
-    private var category = ""
+    private var categoryId = "" // variabile che contiene l'id della categoria selezionata
+    private var category = "" // variabile che contiene il nome della categoria selezionata
 
-    private lateinit var pdfArrayList: ArrayList<ModelPdf>
+    private lateinit var pdfArrayList: ArrayList<ModelPdf> // variabile che contiene l'arraylist di ModelPdf
 
-    private lateinit var pdfAdminAdapter: AdapterPdfAdmin
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPdfListAdminBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val intent = intent
-        categoryId = intent.getStringExtra("categoryId")!!
-        category = intent.getStringExtra("category")!!
+    private lateinit var pdfAdminAdapter: AdapterPdfAdmin // variabile che contiene l'adapter di AdapterPdfAdmin
 
 
-        binding.tvSubTitle.text = category
+    override fun onCreate(savedInstanceState: Bundle?) { // funzione che viene chiamata all'avvio dell'activity
+        super.onCreate(savedInstanceState) // chiamata alla funzione super
+        binding = ActivityPdfListAdminBinding.inflate(layoutInflater) // chiamata alla funzione inflate di ActivityPdfListAdminBinding
+        setContentView(binding.root) // chiamata alla funzione setContentView di ActivityPdfListAdminBinding
 
-        //load pdf category
-        loadPdfList()
+        val intent = intent // variabile che contiene l'intent dell'activity
+        categoryId = intent.getStringExtra("categoryId")!! // chiamata alla funzione getStringExtra di intent che restituisce l'id della categoria selezionata
+        category = intent.getStringExtra("category")!! // chiamata alla funzione getStringExtra di intent che restituisce il nome della categoria selezionata
+
+
+        binding.tvSubTitle.text = category // chiamata alla funzione text di binding che setta il testo del TextView tvSubTitle con il nome della categoria selezionata
+
+        loadPdfList()// chiamata alla funzione loadPdfList
 
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
 
-        //search
         binding.edtSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
@@ -67,23 +65,21 @@ class PdfListAdminActivity : AppCompatActivity() {
 
 
 
-    private fun loadPdfList() {
-        pdfArrayList = ArrayList()
+    private fun loadPdfList() { // funzione che carica la lista dei PDF caricati dall'amministratore
+        pdfArrayList = ArrayList() // chiamata alla funzione ArrayList di kotlin
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Books")
-        ref.orderByChild("categoryId").equalTo(categoryId)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    pdfArrayList.clear()
-                    for (ds in snapshot.children) {
-                        //get data
-                        val model = ds.getValue(ModelPdf::class.java)
-                        //add to list
-                        if (model != null) {
-                            pdfArrayList.add(model)
+        ref.orderByChild("categoryId").equalTo(categoryId) // chiamata alla funzione orderByChild di FirebaseDatabase che ordina i dati in base alla categoria selezionata
+            .addValueEventListener(object : ValueEventListener { // chiamata alla funzione addValueEventListener di FirebaseDatabase
+                override fun onDataChange(snapshot: DataSnapshot) { // funzione che viene chiamata quando ci sono cambiamenti nel database
+                    pdfArrayList.clear() // chiamata alla funzione clear di pdfArrayList
+                    for (ds in snapshot.children) { // ciclo for che cicla sui figli di snapshot
+                        val model = ds.getValue(ModelPdf::class.java) // chiamata alla funzione getValue di ds che restituisce un ModelPdf
+                        if (model != null) { // se model è diverso da null
+                            pdfArrayList.add(model) // chiamata alla funzione add di pdfArrayList con model
                         }
                     }
-                    pdfAdminAdapter = AdapterPdfAdmin(this@PdfListAdminActivity, pdfArrayList)
-                    binding.rvBooks.adapter = pdfAdminAdapter
+                    pdfAdminAdapter = AdapterPdfAdmin(this@PdfListAdminActivity, pdfArrayList) // chiamata alla funzione AdapterPdfAdmin di AdapterPdfAdmin con this@PdfListAdminActivity e pdfArrayList
+                    binding.rvBooks.adapter = pdfAdminAdapter // chiamata alla funzione adapter di binding che setta l'adapter di rvBooks con pdfAdminAdapter
                 }
 
                 override fun onCancelled(error: DatabaseError) {

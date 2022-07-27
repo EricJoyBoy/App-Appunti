@@ -13,22 +13,22 @@ import com.google.firebase.auth.FirebaseAuth
 import it.uninsubria.appappunti.databinding.ActivityProfileBinding
 
 class ProfileActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityProfileBinding
+    private lateinit var binding: ActivityProfileBinding //lateinit var permette di inizializzare la variabile dopo che è stato creato l'oggetto
 
-    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth //lateinit var permette di inizializzare la variabile dopo che è stato creato l'oggetto
 
-    private lateinit var booksArrayList: ArrayList<ModelPdf>
+    private lateinit var booksArrayList: ArrayList<ModelPdf> // lateinit var permette di inizializzare la variabile dopo che è stato creato l'oggetto
 
-    private lateinit var adapterPdfFavorite: AdapterPdfFavorite
+    private lateinit var adapterPdfFavorite: AdapterPdfFavorite //lateinit var permette di inizializzare la variabile dopo che è stato creato l'oggetto
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityProfileBinding.inflate(layoutInflater)
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onCreate(savedInstanceState: Bundle?) { //override permette di sovrascrivere il metodo onCreate
+        binding = ActivityProfileBinding.inflate(layoutInflater) //inflate permette di infilare il layout in una view
+        super.onCreate(savedInstanceState) //super permette di chiamare il metodo onCreate della superclasse
+        setContentView(binding.root) //setContentView permette di impostare la view in una activity
 
-        firebaseAuth = FirebaseAuth.getInstance()
-        loadUserInfo()
-        loadFavoriteBooks()
+        firebaseAuth = FirebaseAuth.getInstance() // inizializzo l'oggetto firebaseAuth
+        loadUserInfo() // chiamo il metodo loadUserInfo
+        loadFavoriteBooks() // chiamo il metodo loadFavoriteBooks
 
         binding.btnBack.setOnClickListener {
             onBackPressed()
@@ -39,8 +39,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadUserInfo() {
-        //db reference to load user info
+    private fun loadUserInfo() { // metodo per caricare le informazioni dell'utente
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
         ref.child(firebaseAuth.uid!!)
             .addValueEventListener(object : ValueEventListener {
@@ -77,7 +76,7 @@ class ProfileActivity : AppCompatActivity() {
             })
     }
 
-    private fun loadFavoriteBooks() {
+    private fun loadFavoriteBooks() { // metodo per caricare i libri preferiti dell'utente
 
         booksArrayList = ArrayList()
 

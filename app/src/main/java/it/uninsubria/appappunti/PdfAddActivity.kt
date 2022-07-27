@@ -124,25 +124,25 @@ class PdfAddActivity : AppCompatActivity() {
         progressDialog.setMessage("Caricamento Pdf in corso ..")
 
         val uid = firebaseAuth.uid
-        val hashMap: HashMap<String, Any> = HashMap()
-        hashMap["uid"] = "$uid"
-        hashMap["id"] = "$timestamp"
-        hashMap["title"] = "$title"
-        hashMap["description"] = "$description"
-        hashMap["categoryId"] = "$selectedCategoryId"
-        hashMap["url"] = "$uploadedPdfUrl"
-        hashMap["timestamp"] = timestamp
-        hashMap["viewsCount"] = 0
-        hashMap["dowloadsCount"] = 0
+        val hashMap: HashMap<String, Any> = HashMap() // hashMap: setta il valore della variabile hashMap con il metodo HashMap()
+        hashMap["uid"] = "$uid" // hashMap["uid"]: setta il valore della variabile hashMap con il metodo put con il metodo uid
+        hashMap["id"] = "$timestamp" // hashMap["id"]: setta il valore della variabile hashMap con il metodo put con il metodo id
+        hashMap["title"] = "$title" // hashMap["title"]: setta il valore della variabile hashMap con il metodo put con il metodo title
+        hashMap["description"] = "$description" // hashMap["description"]: setta il valore della variabile hashMap con il metodo put con il metodo description
+        hashMap["categoryId"] = "$selectedCategoryId" // hashMap["categoryId"]: setta il valore della variabile hashMap con il metodo put con il metodo categoryId
+        hashMap["url"] = "$uploadedPdfUrl" // hashMap["url"]: setta il valore della variabile hashMap con il metodo put con il metodo url
+        hashMap["timestamp"] = timestamp // hashMap["timestamp"]: setta il valore della variabile hashMap con il metodo put con il metodo timestamp
+        hashMap["viewsCount"] = 0 // hashMap["viewsCount"]: setta il valore della variabile hashMap con il metodo put con il metodo viewsCount
+        hashMap["dowloadsCount"] = 0 // hashMap["dowloadsCount"]: setta il valore della variabile hashMap con il metodo put con il metodo dowloadsCount
 
         val ref = FirebaseDatabase.getInstance("https://app-appunti-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Books")
         ref.child("$timestamp").setValue(hashMap).addOnSuccessListener {
-            // Log.d(TAG, "uploadedPdfInfoToDb: upload to db")
+
             progressDialog.dismiss()
             Toast.makeText(this, "Caricamento andato a buon fine", Toast.LENGTH_SHORT).show()
             pdfUri = null
         }.addOnFailureListener {
-            //Log.d(TAG, "uploadedPdfInfoToDb: thất bại")
+
             progressDialog.dismiss()
             Toast.makeText(this, "Caricamento Fallito", Toast.LENGTH_SHORT).show() // Toast: mostra un messaggio di toast con il metodo makeText con il metodo show
         }
@@ -164,7 +164,6 @@ class PdfAddActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) { // error: setta il valore della variabile error con il metodo DatabaseError
-                //Log.d(TAG, "onCancelled: ${error.message}")
 
             }
         })

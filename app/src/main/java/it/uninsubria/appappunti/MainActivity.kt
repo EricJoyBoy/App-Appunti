@@ -6,25 +6,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import it.uninsubria.appappunti.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() { //AppCompatActivity permette di usare il supportActionBar
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding //lateinit perchè non è ancora inizializzato
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreate(savedInstanceState: Bundle?) { // override perchè è un metodo di AppCompatActivity
+        super.onCreate(savedInstanceState) // super perchè è un metodo di AppCompatActivity
+        binding = ActivityMainBinding.inflate(layoutInflater) //inflate perchè è un metodo di LayoutInflater
+        setContentView(binding.root) // setContentView perchè è un metodo di AppCompatActivity
 
 
 
-        // handle click on the button, login
         binding.loginBtn.setOnClickListener {
-            // do something, login
             startActivity(Intent(this, LoginActivity::class.java))
         }
-        // handle click on the button, register
         binding.skipBtn.setOnClickListener {
-            // do something, register
             startActivity(Intent(this, DashboardUserActivity::class.java))
         }
 

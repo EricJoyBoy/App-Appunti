@@ -10,50 +10,47 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import it.uninsubria.appappunti.databinding.RowPdfUserBinding
 
-class PDFUserAdapter  : RecyclerView.Adapter<PDFUserAdapter.HolderPdfUser>, Filterable {
+class PDFUserAdapter  : RecyclerView.Adapter<PDFUserAdapter.HolderPdfUser>, Filterable { //implements Filterable {
 
-    private var context: Context
+    private var context: Context  //context dell'applicazione
 
-    var pdfArrayList: ArrayList<ModelPdf>
+    var pdfArrayList: ArrayList<ModelPdf>  //lista dei pdf
 
-    var filterList: ArrayList<ModelPdf>
+    var filterList: ArrayList<ModelPdf>  //lista dei pdf filtrati
 
-    private var filter: FilterPdfUser? = null
+    private var filter: FilterPdfUser? = null  //filtro per la ricerca
 
-    private lateinit var binding: RowPdfUserBinding
+    private lateinit var binding: RowPdfUserBinding //binding per la row della lista dei pdf
 
-    constructor(context: Context, pdfArrayList: ArrayList<ModelPdf>) {
-        this.context = context
-        this.pdfArrayList = pdfArrayList
-        this.filterList = pdfArrayList
+    constructor(context: Context, pdfArrayList: ArrayList<ModelPdf>) {  //costruttore
+        this.context = context //context dell'applicazione
+        this.pdfArrayList = pdfArrayList // lista dei pdf
+        this.filterList = pdfArrayList //lista dei pdf filtrati
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HolderPdfUser {
-        binding = RowPdfUserBinding.inflate(LayoutInflater.from(context), parent, false)
-        return HolderPdfUser(binding.root)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HolderPdfUser { //crea la row della lista dei pdf
+        binding = RowPdfUserBinding.inflate(LayoutInflater.from(context), parent, false) //infla la row della lista dei pdf
+        return HolderPdfUser(binding.root) //ritorna la row della lista dei pdf
     }
 
-    override fun onBindViewHolder(holder: HolderPdfUser, position: Int) {
-        val model = pdfArrayList[position]
-        val bookId = model.id
-        val categoryId = model.categoryId
-        val title = model.title
-        val description = model.description
-        val uid = model.uid
-        val url = model.url
-        val timestamp = model.timestamp
+    override fun onBindViewHolder(holder: HolderPdfUser, position: Int) { //imposta i dati della row della lista dei pdf
+        val model = pdfArrayList[position] //prende il pdf dalla lista dei pdf
+        val bookId = model.id //prende l'id del pdf
+        val categoryId = model.categoryId //prende l'id della categoria del pdf
+        val title = model.title //prende il titolo del pdf
+        val description = model.description //prende la descrizione del pdf
+        val uid = model.uid //prende l'uid del pdf
+        val url = model.url //prende l'url del pdf
+        val timestamp = model.timestamp //prende il timestamp del pdf
 
-        val date = MyApplication.formatTimeStamp(timestamp)
+        val date = MyApplication.formatTimeStamp(timestamp) //formatta il timestamp del pdf
 
-        //set data
-        holder.tvTitle.text = title
-        holder.tvDescription.text = description
-        holder.tvDate.text = date
+        holder.tvTitle.text = title //imposta il titolo del pdf
+        holder.tvDescription.text = description //imposta la descrizione del pdf
+        holder.tvDate.text = date //imposta la data del pdf
 
-        //load category
-        MyApplication.loadCategory(categoryId, holder.tvCategory)
+        MyApplication.loadCategory(categoryId, holder.tvCategory) //carica la categoria del pdf
 
-        //không cần số trang ở đây, đặt null cho số trang
         MyApplication.loadPdfFromUrlSinglePage(
             url,
             title,
@@ -62,32 +59,31 @@ class PDFUserAdapter  : RecyclerView.Adapter<PDFUserAdapter.HolderPdfUser>, Filt
             null
         )
 
-        //load pdf size
-        MyApplication.loadPdfSize(url, title, holder.tvSize)
+        MyApplication.loadPdfSize(url, title, holder.tvSize) //carica la dimensione del pdf
         holder.itemView.setOnClickListener {
-            val intent = Intent(context, DetailPdfActivity::class.java)
-            intent.putExtra("bookId", bookId)
-            context.startActivity(intent)
+            val intent = Intent(context, DetailPdfActivity::class.java) //crea l'intent per la activity dei dettagli del pdf
+            intent.putExtra("bookId", bookId) //imposta l'id del pdf
+            context.startActivity(intent) //avvia l'activity dei dettagli del pdf
         }
     }
 
-    override fun getItemCount(): Int = pdfArrayList.size
+    override fun getItemCount(): Int = pdfArrayList.size //ritorna la lunghezza della lista dei pdf
 
-    inner class HolderPdfUser(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var pdfView = binding.pdfView
-        var progressBar = binding.progressBar
-        var tvTitle = binding.tvTitle
-        var tvDescription = binding.tvDescription
-        var tvCategory = binding.tvCategory
-        var tvSize = binding.tvSize
-        var tvDate = binding.tvDate
+    inner class HolderPdfUser(itemView: View) : RecyclerView.ViewHolder(itemView) { //inner class
+        var pdfView = binding.pdfView //pdfView
+        var progressBar = binding.progressBar //progressBar
+        var tvTitle = binding.tvTitle //tvTitle
+        var tvDescription = binding.tvDescription //tvDescription
+        var tvCategory = binding.tvCategory //tvCategory
+        var tvSize = binding.tvSize //tvSize
+        var tvDate = binding.tvDate //tvDate
     }
 
-    override fun getFilter(): Filter {
-        if (filter == null) {
-            filter = FilterPdfUser(filterList, this)
+    override fun getFilter(): Filter { //ritorna il filtro
+        if (filter == null) { //    if (filter == null) {
+            filter = FilterPdfUser(filterList, this) //crea il filtro
         }
-        return filter as FilterPdfUser
+        return filter as FilterPdfUser //ritorna il filtro
     }
 
 }
